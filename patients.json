@@ -5,7 +5,20 @@
     "age": 30,
     "record": "Detailed records of patient John Doe.",
     "tests": "Blood test: Normal; X-Ray: Clear.",
-    "nurse_notes": "Patient is recovering well."
+    "nurse_notes": [
+      {
+        "nurse_username": "nurse1",
+        "note": "Patient is recovering well."
+      },
+      {
+        "nurse_username": "nurse2",
+        "note": "Patient shows signs of improvement."
+      },
+      {
+        "nurse_username": "nurse3",
+        "note": "Monitor blood pressure regularly."
+      }
+    ]
   },
   {
     "id": 2,
@@ -13,7 +26,20 @@
     "age": 25,
     "record": "Detailed records of patient Jane Smith.",
     "tests": "MRI: No issues detected.",
-    "nurse_notes": "Patient needs rest."
+    "nurse_notes": [
+      {
+        "nurse_username": "nurse1",
+        "note": "Patient needs rest."
+      },
+      {
+        "nurse_username": "nurse2",
+        "note": "Ensure patient follows dietary restrictions."
+      },
+      {
+        "nurse_username": "nurse3",
+        "note": "Schedule follow-up appointment next week."
+      }
+    ]
   },
   {
     "id": 3,
@@ -21,6 +47,19 @@
     "age": 40,
     "record": "Detailed records of patient Mike Johnson.",
     "tests": "EKG: Normal rhythm.",
-    "nurse_notes": "Monitor blood pressure daily."
+    "nurse_notes": [
+      {
+        "nurse_username": "nurse1",
+        "note": "Monitor heart rate daily."
+      },
+      {
+        "nurse_username": "nurse2",
+        "note": "Patient is active and responsive."
+      },
+      {
+        "nurse_username": "nurse3",
+        "note": "Prepare patient for upcoming surgery."
+      }
+    ]
   }
 ]
