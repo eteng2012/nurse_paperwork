@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Patient Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+        .container {
+            width: 80%;
+            margin: 40px auto;
+            background-color: #fff;
+            padding: 20px 30px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        .nav {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        .nav a {
+            color: #dc3545;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .nav a:hover {
+            text-decoration: underline;
+        }
+        h2, h3 {
+            color: #333;
+        }
+        p {
+            color: #555;
+            line-height: 1.6;
+        }
+        .notes {
+            margin-top: 30px;
+        }
+        .notes h3 {
+            margin-bottom: 15px;
+        }
+        .note {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+        }
+        .note .nurse-name {
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+        .flashes {
+            list-style-type: none;
+            padding: 0;
+            margin-bottom: 15px;
+            color: green;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+            <a href="{{ url_for('index') }}">Back to Patient List</a> | Logged in as <strong>{{ current_user.username }}</strong> | <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+
+        <h2>Patient Details</h2>
+        
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul class="flashes">
+              {% for message in messages %}
+                <li>{{ message }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+        
+        <p><strong>Name:</strong> {{ patient.name }}</p>
+        <p><strong>Age:</strong> {{ patient.age }}</p>
+        <p><strong>Record:</strong> {{ patient.record }}</p>
+        <p><strong>Tests:</strong> {{ patient.tests }}</p>
+
+        <div class="notes">
+            <h3>All Nurses' Notes</h3>
+            {% for note in all_notes %}
+                <div class="note">
+                    <p class="nurse-name">{{ note.nurse.username }} wrote:</p>
+                    <p>{{ note.note }}</p>
+                </div>
+            {% else %}
+                <p>No notes available.</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
