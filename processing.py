@@ -97,13 +97,31 @@ client = OpenAI(
 messages = [{"role": "system", "content": "You are an intelligent assistant."}]
 
 # Assume `get_large_audio_transcription_on_silence` is a function that processes the audio file
-message = get_large_audio_transcription_on_silence("MLK_Something_happening.mp3")
+# message = get_large_audio_transcription_on_silence("MLK_Something_happening.mp3")
+
+message = "Patient stated 'I feel short of breath' when the RN came in to check on them. Vitals signs showed BP 110/75 HR 100 RR 22 SPO2 89. Patient appeared fatigued and pale. This RN contacted the charge RN, rapid response nurse, and primary care physician. Oxygen was given to the patient via nasal cannula. SPO2 increased to 95, respiratory rate slowed to 18. The patient was transferred off of the med-surg unit and sent to the ICU due to unstable condition. Report given to ICU nurse who will continue to monitor the patient's condition. "
+
+            #    "These categories include subjective (medial history told by patients or their friends), "
+            #    "objective (numerical data observed during visit), "
+            #    "assessment (medical concern or concerns by nurse), "
+            #    "plan (diagnosis and care plan, including any prescriptions, self-care, follow-ups, or referrals if applicable), "
+            #    "intervention (what nurse did to the patient if anything, how well the intervention worked, and what changes are needed if any). "
 
 if message:
     # Update the message with the transcription
-    message = ("The following text after the : symbol is an audio transcription "
-               "of an MLK speech. Using this text content, create a properly formatted "
-               ".json file with one variable (countries) holding the list of all the countries mentioned in the text: "
+    message = ("The following text after the ### symbols is an audio transciption of a nurse reading patient notes. "
+            #    "Using this text content, create a properly formatted .json file with 5 string variables. "
+                "Parse the lines in this text into 5 categories. "
+               "These categories include subjective (medical history, background, and patient words), "
+               "objective (observations and numerical data during visit), "
+               "assessment (diagnosis or patient's present condition), "
+               "plan (initial treatment plan), "
+               "intervention (what nurse did if anything, how well it worked, and changes needed if any). "
+               "Feel free to split the content in sentences into different categories. "
+               "Output text using each of these categories as one line. Only add text that directly came from the audio transcription into these lines. There should be 5 lines total, one for each category. "
+                "Categories should be empty if the text fits other categories better. Only write the text content for each line, do not label each line. "
+                "Print in this order: subjective, objective, assessment, plan, intervention.::: "
+                # "Do not output any extraneous text other than the .json file text. The output should start with { and end with }.  "
                + message)
 
     # Append the user message to the conversation history
@@ -116,6 +134,9 @@ if message:
     # Extract the reply from the response
     reply = response.choices[0].message.content
     print(f"ChatGPT: {reply}")
+
+    with open('output.txt', 'w') as file:
+        file.write(reply)
 
     json_output = reformat_to_json5(reply)
     print(json_output)
