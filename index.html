@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Patient Management System</title>
+    <style>
+        body {
+            display: flex;
+            font-family: Arial, sans-serif;
+        }
+        #patient-list {
+            width: 30%;
+            border-right: 1px solid #ccc;
+            padding: 10px;
+        }
+        #patient-details {
+            width: 70%;
+            padding: 10px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            padding: 5px 0;
+            cursor: pointer;
+        }
+        li:hover {
+            background-color: #f0f0f0;
+        }
+        a {
+            color: blue;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="patient-list">
+        <h2>Patient List</h2>
+        <ul>
+            {% for patient in patients %}
+            <li onclick="loadPatient('{{ patient.id }}')">{{ patient.name }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div id="patient-details">
+        <h2>Patient Details</h2>
+        <div id="details">
+            Click on a patient name on the left to view details.
+        </div>
+    </div>
+
+    <script>
+        function loadPatient(id) {
+            fetch('/patient/' + id)
+            .then(response => response.json())
+            .then(data => {
+                const detailsDiv = document.getElementById('details');
+                detailsDiv.innerHTML = `
+                    <p><strong>Name:</strong> ${data.name}</p>
+                    <p><strong>Age:</strong> ${data.age}</p>
+                    <p>
+                        <strong>Record:</strong>
+                        <a href="#" onclick="loadDetails('${data.id}')">${data.record}</a>
+                    </p>
+                `;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function loadDetails(id) {
+            fetch('/patient/details/' + id)
+            .then(response => response.json())
+            .then(data => {
+                const detailsDiv = document.getElementById('details');
+                detailsDiv.innerHTML += `
+                    <h3>Test Results</h3>
+                    <p>${data.tests}</p>
+                    <h3>Nurse's Notes</h3>
+                    <p>${data.nurse_notes}</p>
+                `;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>

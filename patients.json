@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "John Doe",
+    "age": 30,
+    "record": "Detailed records of patient John Doe.",
+    "tests": "Blood test: Normal; X-Ray: Clear.",
+    "nurse_notes": "Patient is recovering well."
+  },
+  {
+    "id": 2,
+    "name": "Jane Smith",
+    "age": 25,
+    "record": "Detailed records of patient Jane Smith.",
+    "tests": "MRI: No issues detected.",
+    "nurse_notes": "Patient needs rest."
+  },
+  {
+    "id": 3,
+    "name": "Mike Johnson",
+    "age": 40,
+    "record": "Detailed records of patient Mike Johnson.",
+    "tests": "EKG: Normal rhythm.",
+    "nurse_notes": "Monitor blood pressure daily."
+  }
+]
