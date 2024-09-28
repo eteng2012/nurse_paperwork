@@ -75,31 +75,33 @@ def get_large_audio_transcription_on_silence(path):
 
 # print(get_large_audio_transcription_on_silence("MLK_Something_happening.mp3"))
 
+openai.my_api_key = ""
+
 # Initialize the system message
-# messages = [{"role": "system", "content": "You are an intelligent assistant."}]
+messages = [{"role": "system", "content": "You are an intelligent assistant."}]
 
-# # Assume `get_large_audio_transcription_on_silence` is a function that processes the audio file
-# message = get_large_audio_transcription_on_silence("MLK_Something_happening.mp3")
+# Assume `get_large_audio_transcription_on_silence` is a function that processes the audio file
+message = get_large_audio_transcription_on_silence("MLK_Something_happening.mp3")
 
-# if message:
-#     # Update the message with the transcription
-#     message = ("The following text after the : symbol is an audio transcription "
-#                "of an MLK speech. Using this text content, create a properly formatted "
-#                ".json file with one variable (countries) holding the list of all the countries mentioned in the text: "
-#                + message)
+if message:
+    # Update the message with the transcription
+    message = ("The following text after the : symbol is an audio transcription "
+               "of an MLK speech. Using this text content, create a properly formatted "
+               ".json file with one variable (countries) holding the list of all the countries mentioned in the text: "
+               + message)
     
-#     # Append the user message to the conversation history
-#     messages.append({"role": "user", "content": message})
+    # Append the user message to the conversation history
+    messages.append({"role": "user", "content": message})
     
-#     # Correct the method call to use the right function
-#     response = openai.ChatCompletion.create(
-#         model="gpt-4",  # Replace with the desired model (can also use "gpt-3.5-turbo")
-#         messages=messages
-#     )
+    # Correct the method call to use the right function
+    response = openai.ChatCompletion.create(
+        model="gpt-4",  # Replace with the desired model (can also use "gpt-3.5-turbo")
+        messages=messages
+    )
 
-#     # Extract the reply from the response
-#     reply = response.choices[0]['message']['content']
-#     print(f"ChatGPT: {reply}")
+    # Extract the reply from the response
+    reply = response.choices[0]['message']['content']
+    print(f"ChatGPT: {reply}")
     
-#     # Append the assistant's reply to the conversation history
-#     messages.append({"role": "assistant", "content": reply})
+    # Append the assistant's reply to the conversation history
+    messages.append({"role": "assistant", "content": reply})
