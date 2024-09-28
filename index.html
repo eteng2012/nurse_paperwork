@@ -8,14 +8,19 @@
             display: flex;
             font-family: Arial, sans-serif;
         }
+        .nav {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+        }
         #patient-list {
             width: 30%;
             border-right: 1px solid #ccc;
-            padding: 10px;
+            padding: 50px 10px 10px 10px; /* 调整padding以避免遮挡 */
         }
         #patient-details {
             width: 70%;
-            padding: 10px;
+            padding: 50px 10px 10px 10px; /* 调整padding以避免遮挡 */
         }
         ul {
             list-style-type: none;
@@ -36,6 +41,17 @@
     </style>
 </head>
 <body>
+    <div class="nav">
+        <a href="/">Home</a>
+        {% if current_user.is_authenticated %}
+            <p>Logged in as {{ current_user.username }} | <a href="{{ url_for('logout') }}">Logout</a></p>
+        {% else %}
+            <p><a href="{{ url_for('login') }}">Login</a> | <a href="{{ url_for('register') }}">Register</a></p>
+        {% endif %}
+    </div>
+    <div class="nav">
+        <a href="/">Home</a>
+    </div>
     <div id="patient-list">
         <h2>Patient List</h2>
         <ul>
@@ -47,7 +63,10 @@
     <div id="patient-details">
         <h2>Patient Details</h2>
         <div id="details">
-            Click on a patient name on the left to view details.
+            <div id="patient-info">
+                Click on a patient name on the left to view details.
+            </div>
+            <div id="patient-extra"></div>
         </div>
     </div>
 
@@ -56,8 +75,10 @@
             fetch('/patient/' + id)
             .then(response => response.json())
             .then(data => {
-                const detailsDiv = document.getElementById('details');
-                detailsDiv.innerHTML = `
+                const patientInfoDiv = document.getElementById('patient-info');
+                const patientExtraDiv = document.getElementById('patient-extra');
+
+                patientInfoDiv.innerHTML = `
                     <p><strong>Name:</strong> ${data.name}</p>
                     <p><strong>Age:</strong> ${data.age}</p>
                     <p>
@@ -65,6 +86,9 @@
                         <a href="#" onclick="loadDetails('${data.id}')">${data.record}</a>
                     </p>
                 `;
+
+                // 清空之前的详细信息
+                patientExtraDiv.innerHTML = '';
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -72,20 +96,26 @@
         }
 
         function loadDetails(id) {
-            fetch('/patient/details/' + id)
-            .then(response => response.json())
-            .then(data => {
-                const detailsDiv = document.getElementById('details');
-                detailsDiv.innerHTML += `
-                    <h3>Test Results</h3>
-                    <p>${data.tests}</p>
-                    <h3>Nurse's Notes</h3>
-                    <p>${data.nurse_notes}</p>
-                `;
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+            const patientExtraDiv = document.getElementById('patient-extra');
+            if (patientExtraDiv.innerHTML === '') {
+                // 如果详细信息为空，则加载数据
+                fetch('/patient/details/' + id)
+                .then(response => response.json())
+                .then(data => {
+                    patientExtraDiv.innerHTML = `
+                        <h3>Test Results</h3>
+                        <p>${data.tests}</p>
+                        <h3>Nurse's Notes</h3>
+                        <p>${data.nurse_notes}</p>
+                    `;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            } else {
+                // 如果详细信息已显示，则清空，实现折叠效果
+                patientExtraDiv.innerHTML = '';
+            }
         }
     </script>
 </body>
