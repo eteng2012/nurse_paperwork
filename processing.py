@@ -20,6 +20,9 @@ import os
 from pydub import AudioSegment
 from pydub.silence import split_on_silence
 import openai
+from openai import OpenAI
+import json
+import json5
 
 # create a speech recognition object
 r = sr.Recognizer()
@@ -73,9 +76,22 @@ def get_large_audio_transcription_on_silence(path):
     # return the text for all chunks detected
     return whole_text
 
+def reformat_to_json5(string):
+    try:
+        return json5.loads(string)
+    except json5.JSONDecodeError as e:
+        print(f"Error decoding JSON: {e}")
+        return None
+
 # print(get_large_audio_transcription_on_silence("MLK_Something_happening.mp3"))
 
-openai.my_api_key = ""
+# TODO: The 'openai.my_api_key' option isn't read in the client API. You will need to pass it when you instantiate the client, e.g. 'OpenAI(my_api_key="")'
+
+os.environ['OPENAI_API_KEY'] = ''
+
+client = OpenAI(
+  api_key=os.environ['OPENAI_API_KEY'],  # this is also the default, it can be omitted
+)
 
 # Initialize the system message
 messages = [{"role": "system", "content": "You are an intelligent assistant."}]
@@ -89,19 +105,26 @@ if message:
                "of an MLK speech. Using this text content, create a properly formatted "
                ".json file with one variable (countries) holding the list of all the countries mentioned in the text: "
                + message)
-    
+
     # Append the user message to the conversation history
     messages.append({"role": "user", "content": message})
-    
+
     # Correct the method call to use the right function
-    response = openai.ChatCompletion.create(
-        model="gpt-4",  # Replace with the desired model (can also use "gpt-3.5-turbo")
-        messages=messages
-    )
+    response = client.chat.completions.create(model="gpt-3.5-turbo",  # Replace with the desired model (can also use "gpt-3.5-turbo")
+    messages=messages)
 
     # Extract the reply from the response
-    reply = response.choices[0]['message']['content']
+    reply = response.choices[0].message.content
     print(f"ChatGPT: {reply}")
-    
+
+    json_output = reformat_to_json5(reply)
+    print(json_output)
+
+    if json_output is not None:
+    # Save to a JSON file
+        with open('output.json', 'w') as json_file:
+            json.dump(json_output, json_file, indent=4)  # Use indent for pretty formatting
+
+
     # Append the assistant's reply to the conversation history
     messages.append({"role": "assistant", "content": reply})
