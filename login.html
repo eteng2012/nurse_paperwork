@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Login</title>
     <style>
+        /* 与之前的样式相同 */
         body {
             display: flex;
             justify-content: center; /* 水平居中 */
@@ -49,17 +50,6 @@
         button:hover {
             background-color: #0056b3; /* 按钮悬停颜色 */
         }
-        .register-link {
-            text-align: center;
-            margin-top: 15px;
-        }
-        .register-link a {
-            color: #007BFF;
-            text-decoration: none;
-        }
-        .register-link a:hover {
-            text-decoration: underline;
-        }
         .flashes {
             list-style-type: none;
             padding: 0;
@@ -70,7 +60,7 @@
 </head>
 <body>
     <div class="login-container">
-        <h2>Login</h2>
+        <h2>Nurse Login</h2>
         {% with messages = get_flashed_messages() %}
           {% if messages %}
             <ul class="flashes">
@@ -93,9 +83,6 @@
                 <button type="submit">Login</button>
             </p>
         </form>
-        <div class="register-link">
-            <p>Don't have an account? <a href="{{ url_for('register') }}">Register here</a>.</p>
-        </div>
     </div>
 </body>
 </html>
