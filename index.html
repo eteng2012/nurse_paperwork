@@ -2,121 +2,188 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Patient Management System</title>
+    <title>Patient List</title>
     <style>
         body {
-            display: flex;
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            display: flex;
+            height: 100vh;
         }
-        .nav {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-        }
-        #patient-list {
-            width: 30%;
+        /* 左侧病人列表 */
+        .sidebar {
+            width: 25%;
+            background-color: #fff;
             border-right: 1px solid #ccc;
-            padding: 50px 10px 10px 10px; /* 调整padding以避免遮挡 */
+            overflow-y: auto;
+            padding: 20px;
         }
-        #patient-details {
-            width: 70%;
-            padding: 50px 10px 10px 10px; /* 调整padding以避免遮挡 */
+        .sidebar h2 {
+            text-align: center;
+            color: #333;
         }
-        ul {
+        ul.patient-list {
             list-style-type: none;
             padding: 0;
         }
-        li {
-            padding: 5px 0;
+        ul.patient-list li {
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            background-color: #e9ecef;
+            border-radius: 4px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
-        li:hover {
-            background-color: #f0f0f0;
+        ul.patient-list li:hover {
+            background-color: #ced4da;
         }
-        a {
-            color: blue;
+        ul.patient-list li.active {
+            background-color: #007bff;
+            color: #fff;
+        }
+        /* 右侧病人详情 */
+        .content {
+            width: 75%;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .nav {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        .nav a {
+            color: #dc3545;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .nav a:hover {
             text-decoration: underline;
-            cursor: pointer;
+        }
+        h2, h3 {
+            color: #333;
+        }
+        p {
+            color: #555;
+            line-height: 1.6;
+        }
+        .notes {
+            margin-top: 30px;
+        }
+        .notes h3 {
+            margin-bottom: 15px;
+        }
+        .note {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+        }
+        .note .nurse-name {
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+        .flashes {
+            list-style-type: none;
+            padding: 0;
+            margin-bottom: 15px;
+            color: green;
+            text-align: center;
         }
     </style>
+    <!-- 引入 jQuery (可选，如果您更喜欢使用原生 JavaScript，可以省略) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <div class="nav">
-        <a href="/">Home</a>
-        {% if current_user.is_authenticated %}
-            <p>Logged in as {{ current_user.username }} | <a href="{{ url_for('logout') }}">Logout</a></p>
-        {% else %}
-            <p><a href="{{ url_for('login') }}">Login</a> | <a href="{{ url_for('register') }}">Register</a></p>
-        {% endif %}
-    </div>
-    <div class="nav">
-        <a href="/">Home</a>
-    </div>
-    <div id="patient-list">
+    <!-- 左侧病人列表 -->
+    <div class="sidebar">
         <h2>Patient List</h2>
-        <ul>
+        
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul class="flashes">
+              {% for message in messages %}
+                <li>{{ message }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+        
+        <ul class="patient-list">
             {% for patient in patients %}
-            <li onclick="loadPatient('{{ patient.id }}')">{{ patient.name }}</li>
+            <li data-id="{{ patient.id }}">{{ patient.name }}</li>
             {% endfor %}
         </ul>
     </div>
-    <div id="patient-details">
+    
+    <!-- 右侧病人详情 -->
+    <div class="content">
+        <div class="nav">
+            Logged in as <strong>{{ current_user.username }}</strong> | <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+        
         <h2>Patient Details</h2>
-        <div id="details">
-            <div id="patient-info">
-                Click on a patient name on the left to view details.
-            </div>
-            <div id="patient-extra"></div>
+        
+        <div id="patient-details">
+            <p>Select a patient from the list to view details.</p>
         </div>
     </div>
-
+    
     <script>
-        function loadPatient(id) {
-            fetch('/patient/' + id)
-            .then(response => response.json())
-            .then(data => {
-                const patientInfoDiv = document.getElementById('patient-info');
-                const patientExtraDiv = document.getElementById('patient-extra');
-
-                patientInfoDiv.innerHTML = `
-                    <p><strong>Name:</strong> ${data.name}</p>
-                    <p><strong>Age:</strong> ${data.age}</p>
-                    <p>
-                        <strong>Record:</strong>
-                        <a href="#" onclick="loadDetails('${data.id}')">${data.record}</a>
-                    </p>
-                `;
-
-                // 清空之前的详细信息
-                patientExtraDiv.innerHTML = '';
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        }
-
-        function loadDetails(id) {
-            const patientExtraDiv = document.getElementById('patient-extra');
-            if (patientExtraDiv.innerHTML === '') {
-                // 如果详细信息为空，则加载数据
-                fetch('/patient/details/' + id)
-                .then(response => response.json())
-                .then(data => {
-                    patientExtraDiv.innerHTML = `
-                        <h3>Test Results</h3>
-                        <p>${data.tests}</p>
-                        <h3>Nurse's Notes</h3>
-                        <p>${data.nurse_notes}</p>
-                    `;
-                })
-                .catch(error => {
-                    console.error('Error:', error);
+        $(document).ready(function(){
+            // 处理病人列表的点击事件
+            $('.patient-list li').click(function(){
+                // 移除其他病人的激活状态
+                $('.patient-list li').removeClass('active');
+                // 添加激活状态到当前点击的病人
+                $(this).addClass('active');
+                
+                // 获取病人ID
+                var patient_id = $(this).data('id');
+                
+                // 发送 AJAX 请求获取病人详细信息
+                $.ajax({
+                    url: '/patient/' + patient_id + '/details',
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(data){
+                        if(data.error){
+                            $('#patient-details').html('<p>' + data.error + '</p>');
+                        } else {
+                            var html = '';
+                            html += '<p><strong>Name:</strong> ' + data.name + '</p>';
+                            html += '<p><strong>Age:</strong> ' + data.age + '</p>';
+                            html += '<p><strong>Record:</strong> ' + data.record + '</p>';
+                            html += '<p><strong>Tests:</strong> ' + data.tests + '</p>';
+                            
+                            html += '<div class="notes">';
+                            html += '<h3>All Nurses\' Notes</h3>';
+                            
+                            if(data.nurse_notes.length > 0){
+                                data.nurse_notes.forEach(function(note){
+                                    html += '<div class="note">';
+                                    html += '<p class="nurse-name">' + note.nurse_username + ' wrote:</p>';
+                                    html += '<p>' + note.note + '</p>';
+                                    html += '</div>';
+                                });
+                            } else {
+                                html += '<p>No notes available.</p>';
+                            }
+                            
+                            html += '</div>';
+                            
+                            $('#patient-details').html(html);
+                        }
+                    },
+                    error: function(){
+                        $('#patient-details').html('<p>An error occurred while fetching patient details.</p>');
+                    }
                 });
-            } else {
-                // 如果详细信息已显示，则清空，实现折叠效果
-                patientExtraDiv.innerHTML = '';
-            }
-        }
+            });
+        });
     </script>
 </body>
 </html>
