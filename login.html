@@ -2,28 +2,28 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Doctor Login</title>
     <style>
-        /* 与之前的样式相同 */
         body {
             display: flex;
-            justify-content: center; /* 水平居中 */
-            align-items: center;     /* 垂直居中 */
-            height: 100vh;           /* 视口高度 */
+            justify-content: center; /* Horizontal centering */
+            align-items: center;     /* Vertical centering */
+            height: 100vh;           /* Full viewport height */
             margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0; /* 背景颜色 */
+            background-color: #f0f0f0; /* Background color */
         }
         .login-container {
-            background-color: #fff; /* 白色背景 */
+            background-color: #fff; /* White background */
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 阴影 */
-            width: 300px; /* 固定宽度 */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Shadow */
+            width: 300px; /* Fixed width */
         }
         h2 {
             text-align: center;
             margin-bottom: 20px;
+            color: #333;
         }
         form p {
             margin-bottom: 15px;
@@ -31,53 +31,67 @@
         label {
             display: block;
             margin-bottom: 5px;
+            color: #555;
         }
         input[type="text"],
         input[type="password"] {
             width: 100%;
             padding: 8px;
-            box-sizing: border-box; /* 包含内边距和边框 */
+            box-sizing: border-box; /* Include padding and border */
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
         button {
             width: 100%;
             padding: 10px;
-            background-color: #007BFF; /* 按钮背景颜色 */
+            background-color: #007BFF; /* Button background color */
             color: #fff;
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            font-size: 16px;
         }
         button:hover {
-            background-color: #0056b3; /* 按钮悬停颜色 */
+            background-color: #0056b3; /* Button hover color */
         }
         .flashes {
             list-style-type: none;
             padding: 0;
             margin-bottom: 15px;
             color: red;
+            text-align: center;
+        }
+        .flashes li.success {
+            color: green;
+        }
+        .flashes li.danger {
+            color: red;
+        }
+        .flashes li.info {
+            color: #0c5460;
         }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <h2>Nurse Login</h2>
-        {% with messages = get_flashed_messages() %}
+        <h2>Doctor Login</h2>
+        {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
             <ul class="flashes">
-              {% for message in messages %}
-                <li>{{ message }}</li>
+              {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
               {% endfor %}
             </ul>
           {% endif %}
         {% endwith %}
         <form method="post" action="{{ url_for('login') }}">
             <p>
-                <label>Username:</label>
-                <input type="text" name="username" required>
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
             </p>
             <p>
-                <label>Password:</label>
-                <input type="password" name="password" requireda>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
             </p>
             <p>
                 <button type="submit">Login</button>
