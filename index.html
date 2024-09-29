@@ -40,6 +40,22 @@
             background-color: #007bff;
             color: #fff;
         }
+        /* Add Patient Button */
+        .add-patient-button {
+            display: block;
+            width: 100%;
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #28a745;
+            color: #fff;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .add-patient-button:hover {
+            background-color: #218838;
+        }
         /* Right Content - Patient Details */
         .content {
             width: 75%;
@@ -140,6 +156,9 @@
     <!-- Left Sidebar: Patient List -->
     <div class="sidebar">
         <h2>Patient List</h2>
+
+        <!-- Add Patient Button -->
+        <a href="{{ url_for('add_patient') }}" class="add-patient-button">Add New Patient</a>
         
         {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
@@ -170,28 +189,6 @@
             <p>Select a patient from the list to view details.</p>
         </div>
     </div>
-    
-    <!-- Optional: Modal for Viewing Patient Details (Alternative to inline display) -->
-    <!--
-    <div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="detailsModalLabel">Patient Details</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body" id="modalBody">
-            <!-- Details will be loaded here via AJAX -->
-          <!-- </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    -->
     
     <script>
         $(document).ready(function(){
@@ -251,19 +248,6 @@
                         $('#patient-details').html('<p>An error occurred while fetching patient details.</p>');
                     }
                 });
-            });
-            
-            // Handle collapse sections (if any in future enhancements)
-            $(document).on('click', '.collapse-section button', function(){
-                // Toggle the corresponding content
-                $(this).next('.collapse-content').slideToggle();
-                
-                // Optionally, close other sections within the same note
-                // Uncomment the following lines to enable this behavior:
-                /*
-                var currentContent = $(this).next('.collapse-content');
-                $(this).parent('.collapse-section').siblings('.collapse-section').find('.collapse-content').slideUp();
-                */
             });
         });
     </script>
