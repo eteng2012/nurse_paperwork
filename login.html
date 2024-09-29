@@ -5,69 +5,74 @@
     <title>Doctor Login</title>
     <style>
         body {
-            display: flex;
-            justify-content: center; /* Horizontal centering */
-            align-items: center;     /* Vertical centering */
-            height: 100vh;           /* Full viewport height */
-            margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0; /* Background color */
+            background-color: #f9f9f9;
+            display: flex;
+            height: 100vh;
+            align-items: center;
+            justify-content: center;
         }
         .login-container {
-            background-color: #fff; /* White background */
-            padding: 20px;
+            background-color: #fff;
+            padding: 25px 30px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Shadow */
-            width: 300px; /* Fixed width */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
         }
-        h2 {
+        .login-container h2 {
             text-align: center;
-            margin-bottom: 20px;
             color: #333;
+            margin-bottom: 20px;
         }
-        form p {
-            margin-bottom: 15px;
+        .form-group {
+            margin-bottom: 20px;
         }
         label {
             display: block;
-            margin-bottom: 5px;
             color: #555;
+            margin-bottom: 5px;
         }
-        input[type="text"],
-        input[type="password"] {
+        input[type="text"], input[type="password"] {
             width: 100%;
-            padding: 8px;
-            box-sizing: border-box; /* Include padding and border */
+            padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
         }
-        button {
+        .btn-login {
             width: 100%;
-            padding: 10px;
-            background-color: #007BFF; /* Button background color */
+            padding: 12px;
+            background-color: #007bff;
             color: #fff;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
         }
-        button:hover {
-            background-color: #0056b3; /* Button hover color */
+        .btn-login:hover {
+            background-color: #0069d9;
         }
+        /* Flash Messages */
         .flashes {
             list-style-type: none;
             padding: 0;
             margin-bottom: 15px;
-            color: red;
             text-align: center;
         }
+        .flashes li {
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
         .flashes li.success {
-            color: green;
+            background-color: #d4edda;
+            color: #155724;
         }
         .flashes li.danger {
-            color: red;
+            background-color: #f8d7da;
+            color: #721c24;
         }
         .flashes li.info {
+            background-color: #d1ecf1;
             color: #0c5460;
         }
     </style>
@@ -75,6 +80,7 @@
 <body>
     <div class="login-container">
         <h2>Doctor Login</h2>
+        
         {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
             <ul class="flashes">
@@ -84,18 +90,17 @@
             </ul>
           {% endif %}
         {% endwith %}
-        <form method="post" action="{{ url_for('login') }}">
-            <p>
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
-            </p>
-            <p>
-                <label for="password">Password:</label>
+        
+        <form method="POST">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required autofocus>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
-            </p>
-            <p>
-                <button type="submit">Login</button>
-            </p>
+            </div>
+            <button type="submit" class="btn-login">Login</button>
         </form>
     </div>
 </body>
