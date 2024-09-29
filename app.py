@@ -16,7 +16,6 @@ import os
 from datetime import datetime
 from process_audio import run
 
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secure_random_secret_key'  # Replace with a secure key
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///patients.db'
@@ -239,6 +238,28 @@ def get_patient_details_ajax(patient_id):
 
     return jsonify(patient_details)
 
+# Route to add a new patient
+@app.route('/add_patient', methods=['GET', 'POST'])
+@login_required
+def add_patient():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        age = request.form.get('age')
+        
+        if not name or not age:
+            flash('Please provide both name and age for the patient.', 'danger')
+            return redirect(url_for('add_patient'))
+        
+        # Create and save the new patient
+        new_patient = Patient(name=name, age=int(age))
+        db.session.add(new_patient)
+        db.session.commit()
+        
+        flash('New patient added successfully.', 'success')
+        return redirect(url_for('index'))
+    
+    return render_template('add_patient.html')
+
 # Route to add a new doctor note with optional audio upload
 @app.route('/patient/<int:patient_id>/add_note', methods=['GET', 'POST'])
 @login_required
@@ -266,9 +287,6 @@ def add_doctor_note(patient_id):
             # Pass the audio file path to the helper function to extract note data
             note_data = run(file_path)
 
-            print("boopy")
-            print(note_data)
-            
             # Create and save the new doctor note
             new_note = DoctorNote(
                 patient_id=patient.id,
@@ -295,8 +313,6 @@ def add_doctor_note(patient_id):
     return render_template('upload_audio.html', patient=patient)
 
 # Route to serve uploaded audio files (if needed)
-# Since audio_file is not stored in the database, this route may not be necessary
-# Keeping it here for completeness, but access to audio files won't be linked to notes
 @app.route('/uploads/audio/<filename>')
 @login_required
 def uploaded_audio(filename):
