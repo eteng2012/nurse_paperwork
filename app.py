@@ -64,6 +64,10 @@ class DoctorNote(db.Model):
 
     patient = db.relationship('Patient', backref=db.backref('doctor_notes', lazy=True))
 
+@app.route('/')
+def root():
+    return redirect(url_for('login'))
+
 # User loader callback for Flask-Login
 @login_manager.user_loader
 def load_user(user_id):
