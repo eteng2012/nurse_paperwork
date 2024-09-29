@@ -1,21 +1,8 @@
 {
-    "subjective": [
-        "Patient stated 'I feel short of breath' when the RN came in to check on them."
-    ],
-    "objective": [
-        "Vitals signs showed BP 110/75 HR 100 RR 22 SPO2 89.",
-        "Patient appeared fatigued and pale."
-    ],
-    "assessment": [
-        "Patient presented with shortness of breath and low SPO2, indicating possible respiratory distress.",
-        "Patient's unstable condition warranted transfer to the ICU for closer monitoring and management."
-    ],
-    "plan": [
-        "Oxygen was given to the patient via nasal cannula.",
-        "Patient transferred to the ICU for further management and monitoring by the ICU nurse."
-    ],
-    "intervention": [
-        "RN contacted charge RN, rapid response nurse, and primary care physician for assistance.",
-        "SPO2 increased to 95, respiratory rate slowed to 18 with oxygen therapy."
-    ]
+    "subjective": "Patient stated 'I feel short of breath' when the RN came in to check on them.  ",
+    "objective": "Vitals signs showed BP 110/75 HR 100 RR 22 SPO2 89. Patient appeared fatigued and pale.  ",
+    "assessment": "May be suffering from asthma.  ",
+    "plan": "This RN contacted the charge RN, rapid response nurse, and primary care physician.  ",
+    "intervention": "Oxygen was given to the patient via nasal cannula. SPO2 increased to 95, respiratory rate slowed to 18.  ",
+    "other": "The patient was transferred off of the med-surg unit and sent to the ICU due to unstable condition.  Report given to ICU nurse who will continue to monitor the patient's condition.  "
 }
