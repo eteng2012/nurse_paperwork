@@ -219,7 +219,7 @@
                             // Loop through doctor notes
                             if(data.doctor_notes.length > 0){
                                 html += '<div class="notes">';
-                                html += '<h3>Doctor Notes:</h3>';
+                                html += '<h3>Nurse Notes:</h3>';
                                 data.doctor_notes.forEach(function(note, index){
                                     html += '<div class="note">';
                                     
@@ -238,7 +238,7 @@
                                 });
                                 html += '</div>';
                             } else {
-                                html += '<p>No doctor notes available for this patient.</p>';
+                                html += '<p>No nurse notes available for this patient.</p>';
                             }
                             
                             $('#patient-details').html(html);
