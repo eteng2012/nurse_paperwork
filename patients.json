@@ -3,20 +3,24 @@
     "id": 1,
     "name": "John Doe",
     "age": 30,
-    "record": "Detailed records of patient John Doe.",
-    "tests": "Blood test: Normal; X-Ray: Clear.",
-    "nurse_notes": [
+    "doctor_notes": [
       {
-        "nurse_username": "nurse1",
-        "note": "Patient is recovering well."
+        "date": "2024-04-20 10:30",
+        "subjective": "Patient reports feeling dizzy and lightheaded.",
+        "objective": "Blood pressure is 90/60 mmHg.",
+        "assessment": "Possible hypotension.",
+        "plan": "Increase fluid intake and monitor blood pressure.",
+        "intervention": "Administered 500ml IV fluids.",
+        "other": "Patient advised to rest and avoid sudden movements."
       },
       {
-        "nurse_username": "nurse2",
-        "note": "Patient shows signs of improvement."
-      },
-      {
-        "nurse_username": "nurse3",
-        "note": "Monitor blood pressure regularly."
+        "date": "2024-04-21 14:15",
+        "subjective": "Patient complains of persistent headaches.",
+        "objective": "CT scan shows no abnormalities.",
+        "assessment": "Tension headaches likely.",
+        "plan": "Prescribe analgesics and recommend relaxation techniques.",
+        "intervention": "Provided medication and scheduled follow-up appointment.",
+        "other": "Patient advised to maintain a headache diary."
       }
     ]
   },
@@ -24,20 +28,15 @@
     "id": 2,
     "name": "Jane Smith",
     "age": 25,
-    "record": "Detailed records of patient Jane Smith.",
-    "tests": "MRI: No issues detected.",
-    "nurse_notes": [
+    "doctor_notes": [
       {
-        "nurse_username": "nurse1",
-        "note": "Patient needs rest."
-      },
-      {
-        "nurse_username": "nurse2",
-        "note": "Ensure patient follows dietary restrictions."
-      },
-      {
-        "nurse_username": "nurse3",
-        "note": "Schedule follow-up appointment next week."
+        "date": "2024-04-22 09:45",
+        "subjective": "Patient feels fatigued and has difficulty sleeping.",
+        "objective": "Blood tests are within normal range.",
+        "assessment": "Possible anxiety disorder.",
+        "plan": "Refer to a mental health specialist.",
+        "intervention": "Scheduled counseling sessions.",
+        "other": "Advised patient to engage in regular physical activity."
       }
     ]
   },
@@ -45,20 +44,15 @@
     "id": 3,
     "name": "Mike Johnson",
     "age": 40,
-    "record": "Detailed records of patient Mike Johnson.",
-    "tests": "EKG: Normal rhythm.",
-    "nurse_notes": [
+    "doctor_notes": [
       {
-        "nurse_username": "nurse1",
-        "note": "Monitor heart rate daily."
-      },
-      {
-        "nurse_username": "nurse2",
-        "note": "Patient is active and responsive."
-      },
-      {
-        "nurse_username": "nurse3",
-        "note": "Prepare patient for upcoming surgery."
+        "date": "2024-04-23 11:00",
+        "subjective": "Patient is preparing for upcoming surgery.",
+        "objective": "EKG shows normal heart rhythm.",
+        "assessment": "Patient is fit for surgery.",
+        "plan": "Proceed with scheduled surgery.",
+        "intervention": "Pre-operative instructions provided.",
+        "other": "Patient consent obtained."
       }
     ]
   }
