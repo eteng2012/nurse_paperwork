@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Patient List</title>
+    <title>Patient Management</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,7 +12,7 @@
             display: flex;
             height: 100vh;
         }
-        /* 左侧病人列表 */
+        /* Left Sidebar - Patient List */
         .sidebar {
             width: 25%;
             background-color: #fff;
@@ -36,14 +36,11 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
-        ul.patient-list li:hover {
-            background-color: #ced4da;
-        }
-        ul.patient-list li.active {
+        ul.patient-list li:hover, ul.patient-list li.active {
             background-color: #007bff;
             color: #fff;
         }
-        /* 右侧病人详情 */
+        /* Right Content - Patient Details */
         .content {
             width: 75%;
             padding: 20px;
@@ -81,32 +78,82 @@
             border-radius: 4px;
             background-color: #f8f9fa;
         }
-        .note .nurse-name {
-            font-weight: bold;
-            color: #007bff;
+        .note .date {
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-bottom: 10px;
+            /* Added styling for the prefix */
+            display: flex;
+            align-items: center;
+        }
+        .note .date strong {
+            margin-right: 5px;
+            color: #343a40; /* Darker color for the prefix */
+        }
+        .collapse-section {
             margin-bottom: 10px;
         }
+        .collapse-section button {
+            width: 100%;
+            padding: 10px;
+            background-color: #6c757d;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 16px;
+        }
+        .collapse-section button:hover {
+            background-color: #5a6268;
+        }
+        .collapse-content {
+            display: none;
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+            border-top: none;
+            border-radius: 0 0 4px 4px;
+            background-color: #fff;
+            margin-bottom: 10px;
+        }
+        /* Flash Messages */
         .flashes {
             list-style-type: none;
             padding: 0;
             margin-bottom: 15px;
-            color: green;
             text-align: center;
         }
+        .flashes li {
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .flashes li.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .flashes li.danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .flashes li.info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
     </style>
-    <!-- 引入 jQuery (可选，如果您更喜欢使用原生 JavaScript，可以省略) -->
+    <!-- Include jQuery from CDN -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <!-- 左侧病人列表 -->
+    <!-- Left Sidebar: Patient List -->
     <div class="sidebar">
         <h2>Patient List</h2>
         
-        {% with messages = get_flashed_messages() %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
             <ul class="flashes">
-              {% for message in messages %}
-                <li>{{ message }}</li>
+              {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
               {% endfor %}
             </ul>
           {% endif %}
@@ -119,7 +166,7 @@
         </ul>
     </div>
     
-    <!-- 右侧病人详情 -->
+    <!-- Right Content: Patient Details -->
     <div class="content">
         <div class="nav">
             Logged in as <strong>{{ current_user.username }}</strong> | <a href="{{ url_for('logout') }}">Logout</a>
@@ -134,17 +181,16 @@
     
     <script>
         $(document).ready(function(){
-            // 处理病人列表的点击事件
+            // Handle patient list item click
             $('.patient-list li').click(function(){
-                // 移除其他病人的激活状态
+                // Remove active class from all and add to the clicked one
                 $('.patient-list li').removeClass('active');
-                // 添加激活状态到当前点击的病人
                 $(this).addClass('active');
                 
-                // 获取病人ID
+                // Get patient ID
                 var patient_id = $(this).data('id');
                 
-                // 发送 AJAX 请求获取病人详细信息
+                // Fetch patient details via AJAX
                 $.ajax({
                     url: '/patient/' + patient_id + '/details',
                     method: 'GET',
@@ -156,24 +202,56 @@
                             var html = '';
                             html += '<p><strong>Name:</strong> ' + data.name + '</p>';
                             html += '<p><strong>Age:</strong> ' + data.age + '</p>';
-                            html += '<p><strong>Record:</strong> ' + data.record + '</p>';
-                            html += '<p><strong>Tests:</strong> ' + data.tests + '</p>';
                             
-                            html += '<div class="notes">';
-                            html += '<h3>All Nurses\' Notes</h3>';
-                            
-                            if(data.nurse_notes.length > 0){
-                                data.nurse_notes.forEach(function(note){
+                            // Loop through doctor notes
+                            if(data.doctor_notes.length > 0){
+                                data.doctor_notes.forEach(function(note, index){
                                     html += '<div class="note">';
-                                    html += '<p class="nurse-name">' + note.nurse_username + ' wrote:</p>';
-                                    html += '<p>' + note.note + '</p>';
+                                    
+                                    // Prepend "Patient Note:" before the date
+                                    html += '<p class="date"><strong>Patient Note:</strong> ' + note.date + '</p>';
+                                    
+                                    // Subjective
+                                    html += '<div class="collapse-section">';
+                                    html += '<button type="button">Subjective</button>';
+                                    html += '<div class="collapse-content">' + note.subjective + '</div>';
+                                    html += '</div>';
+                                    
+                                    // Objective
+                                    html += '<div class="collapse-section">';
+                                    html += '<button type="button">Objective</button>';
+                                    html += '<div class="collapse-content">' + note.objective + '</div>';
+                                    html += '</div>';
+                                    
+                                    // Assessment
+                                    html += '<div class="collapse-section">';
+                                    html += '<button type="button">Assessment</button>';
+                                    html += '<div class="collapse-content">' + note.assessment + '</div>';
+                                    html += '</div>';
+                                    
+                                    // Plan
+                                    html += '<div class="collapse-section">';
+                                    html += '<button type="button">Plan</button>';
+                                    html += '<div class="collapse-content">' + note.plan + '</div>';
+                                    html += '</div>';
+                                    
+                                    // Intervention
+                                    html += '<div class="collapse-section">';
+                                    html += '<button type="button">Intervention</button>';
+                                    html += '<div class="collapse-content">' + note.intervention + '</div>';
+                                    html += '</div>';
+                                    
+                                    // Other
+                                    html += '<div class="collapse-section">';
+                                    html += '<button type="button">Other</button>';
+                                    html += '<div class="collapse-content">' + note.other + '</div>';
+                                    html += '</div>';
+                                    
                                     html += '</div>';
                                 });
                             } else {
-                                html += '<p>No notes available.</p>';
+                                html += '<p>No doctor notes available for this patient.</p>';
                             }
-                            
-                            html += '</div>';
                             
                             $('#patient-details').html(html);
                         }
@@ -182,6 +260,19 @@
                         $('#patient-details').html('<p>An error occurred while fetching patient details.</p>');
                     }
                 });
+            });
+            
+            // Handle collapse sections
+            $(document).on('click', '.collapse-section button', function(){
+                // Toggle the corresponding content
+                $(this).next('.collapse-content').slideToggle();
+                
+                // Optionally, close other sections within the same note
+                // Uncomment the following lines to enable this behavior:
+                /*
+                var currentContent = $(this).next('.collapse-content');
+                $(this).parent('.collapse-section').siblings('.collapse-section').find('.collapse-content').slideUp();
+                */
             });
         });
     </script>
